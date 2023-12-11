@@ -1,1 +1,1 @@
-just type
+ok so smart
