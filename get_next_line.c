@@ -9,97 +9,147 @@
 /*   Updated: 2023/11/09 16:46:33 by asyed            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+/* ************************************************************************** */
+/* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-//get_first_line(char *firstline)
-//get_other_lines
-//read
-
-char	*get_next_line(int fd)
+char    *ft_read(int fd)
 {
-	int	bytesreading;
-	char	*box;
-	char	*lorry;
-	char	*temp;
-	char	*newlineloc;
-	size_t	line_len;
-	char	*firstline;
-	//char	*secondline;
-	static char	*last_newline = NULL;
+    static char	*store = NULL;
+    int     bytesread;
+    char    *buffer;
+    char	*temp;
 
-	box = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (box == NULL)
-		return (NULL);
-	lorry = ft_strdup("");
+    buffer = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+    if (buffer == NULL)
+        return (NULL);
+    if (store == NULL)
+    	store = ft_strdup("");
+    bytesread = 1;
+    while (bytesread > 0)
+    {
+    	bytesread = read(fd, buffer, BUFFER_SIZE);
+    	buffer[bytesread] = '\0';
+    	temp = ft_strjoin(store, buffer);
+    	//free(store); // problem
+    	store = temp;
 
-	while ((bytesreading = read(fd, box, BUFFER_SIZE)) > 0)
-	{
-		// concatenate box into lorry
-		temp = ft_strjoin(lorry, box);
-		free(lorry);
-		lorry = temp;
-		// find '\n' loc
-		newlineloc = ft_strchr(lorry, '\n');
-		if (newlineloc != NULL)
-		{
-			// find firstline
-			line_len = newlineloc - lorry;
-			firstline = (char *)ft_calloc(line_len + 1, sizeof(char));
-			if (firstline == NULL)
-			{
-				free (lorry);
-				return (NULL);
-			}
-			ft_strlcpy(firstline, lorry, line_len + 1);
-			
-			// update newline loc using static char
-			last_newline = ft_strdup(newlineloc + 1);
-			free(lorry);
-			return (firstline);
-
-		}
-		//concatenate box to lorry
-		//check for newline in lorry
-		//if newline found, split lorry firstline and last newline
-		//return firstline
-	}
-
-	if (bytesreading == 0 && lorry[0] != '\0')
-	{
-		return(lorry);
-	}
-	free(lorry);
-
-	if (fd < 0 || bytesreading < 0)
-	{
-		free (lorry);
-		return (NULL);
-	}
-	return (last_newline);
+    	if(ft_strchr(buffer, '\n'))
+    	{
+    		break;
+    	}
+    }
+    free(buffer);
+    if (bytesread <= 0)
+    {
+        return (NULL);
+    }
+    return (store);
 }
 
+char    *get_first_line(char *content)
+{
+    char    *newline_loc;
+    int  line_len;
+    char    *line;
+
+    newline_loc = ft_strchr(content, '\n');
+    if (newline_loc == NULL)
+        return (ft_strdup(content));
+    line_len = newline_loc - content;
+    line = (char *)ft_calloc(line_len + 1, sizeof(char));
+    if (line == NULL)
+        return (NULL);
+    ft_strlcpy(line, content, line_len + 1);
+    return (line);
+}
+
+char    *ft_next(char *content)
+{
+    static char *next_line = NULL;
+    char        *temp;
+    char        *newline_loc;
+
+    newline_loc = ft_strchr(content, '\n');
+    if (newline_loc == NULL)
+        next_line = ft_strdup(content); // error is here
+    else
+    {
+        temp = ft_strdup(newline_loc + 1);
+        if (temp == NULL)
+            return (NULL);
+        free (next_line);
+        next_line = temp;
+    }
+    return (next_line);
+}
+
+char    *get_next_line(int fd)
+{
+    static char *remainder = NULL;
+    static char        *buffer;
+    char        *line;
+
+    buffer = ft_read(fd);
+    if (buffer == NULL)
+        return (NULL);
+    line = get_first_line(buffer);
+    if (line == NULL)
+    {
+        free (buffer);
+        return (NULL);
+    }
+    remainder = ft_next(buffer);
+    if (remainder == NULL)
+    {
+        free (buffer);
+        return (NULL);
+    }
+    free (buffer);
+    buffer = ft_strdup(remainder); // clean up
+    return (line);
+}
+
+#include <stdio.h>
+/*
 int	main(void)
 {
-	int fd;
-	char *line;
-
-	// open .txt, O_RDONLY
+	int	fd;
+	int	i;
+	char	*a;
 
 	fd = open("tim.txt", O_RDONLY);
-
-	if (fd == -1) // A file descriptor is an unsigned integer used by a process to identify an open file
+	i = 0;
+	while (i < 2)
 	{
-		perror("error opening file");
-		return (1);
+		a = get_next_line(fd);
+		printf("%s", a);
+		free (a);
+		i++;
 	}
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("%s\n", line);
-		free(line);
-	}	
-	// free (line) -- this is where we free line for mem alloc
-	close(fd);
 	return (0);
+}
+*/
+
+int main(void)
+{
+    int     fd;
+    char    *line;
+
+    fd = open("tim.txt", O_RDONLY);
+    if (fd == -1)
+    {
+        perror("error opening file");
+        return (1);
+    }
+    line = get_next_line(fd);
+    while (line != NULL)
+    {
+        printf("%s", line);
+        free(line);
+        line = get_next_line(fd);
+    }
+    close(fd);
+    return (0);
 }

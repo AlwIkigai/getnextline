@@ -38,9 +38,9 @@ char	*ft_calloc(size_t element, size_t size) // char *fx due to calloc type
 
 //ft_strlen
 
-size_t	ft_strlen(const char *s)
+int	ft_strlen(char *s)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	while (s[i])
@@ -52,7 +52,7 @@ size_t	ft_strlen(const char *s)
 
 //ft_strchr -> return everything after \n
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
 	int	i;
 
@@ -73,7 +73,7 @@ char	*ft_strchr(const char *s, int c)
 //ft_strlcpy
 
 //ft_strdup
-char	*ft_strdup(const char *s)
+char	*ft_strdup(char *s)
 {
 	int		i;
 	int		len;
@@ -93,7 +93,7 @@ char	*ft_strdup(const char *s)
 	return (dup);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+size_t	ft_strlcpy(char *dst, char *src, size_t size)
 {
 	size_t	src_len;
 	size_t	i;
@@ -111,8 +111,29 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (src_len);
 }
 
+void	*ft_memcpy(void *dest, void *src, size_t n)
+{
+	unsigned char		*d;
+	unsigned char	*s;
+
+	if (dest == NULL && src == NULL)
+		return (dest);
+	d = (unsigned char *)dest;
+	s = (unsigned char *)src;
+	if (d > s && d < s + n)
+		return (NULL);
+	while (n > 0)
+	{
+		*d = *s;
+		d++;
+		s++;
+		n--;
+	}
+	return (dest);
+}
+
 //ft_strjoin
-char	*ft_strjoin(const char *s1, const char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	len1;
 	size_t	len2;
