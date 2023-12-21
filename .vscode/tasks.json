@@ -9,8 +9,12 @@
                 "-g",
                 "${file}",
                 "-o",
+<<<<<<< HEAD
                 "${fileDirname}/${fileBasenameNoExtension}",
                 ""
+=======
+                "${fileDirname}/${fileBasenameNoExtension}"
+>>>>>>> 0b3dca3b8b7e1091b5333ccbfa04403ef38ec572
             ],
             "options": {
                 "cwd": "${fileDirname}"
