@@ -6,7 +6,7 @@
 /*   By: asyed <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 16:46:56 by asyed             #+#    #+#             */
-/*   Updated: 2023/11/09 16:46:58 by asyed            ###   ########.fr       */
+/*   Updated: 2023/12/14 19:22:19 by asyed            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ size_t	ft_strlen(const char *s)
 	{
 		i++;
 	}
-	return(i);
+	return (i);
 }
 
 //ft_strchr -> return everything after \n

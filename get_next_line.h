@@ -6,12 +6,13 @@
 /*   By: asyed <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 16:47:08 by asyed             #+#    #+#             */
-/*   Updated: 2023/11/09 16:47:13 by asyed            ###   ########.fr       */
+/*   Updated: 2023/12/14 19:19:49 by asyed            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+#define BUFFER_SIZE 1
 
 # include <unistd.h>
 # include <stdlib.h>
