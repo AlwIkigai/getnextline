@@ -12,44 +12,6 @@
 
 #include "get_next_line.h"
 
-//ft_calloc
-
-void	ft_bzero(void *ptrmemadd, size_t n)
-{
-	unsigned char	*p;
-
-	p =(unsigned char *)ptrmemadd;
-	while (n > 0)
-	{
-		*p = 0;
-		p++;
-		n--;
-	}
-}
-char	*ft_calloc(size_t element, size_t size) // char *fx due to calloc type
-{
-	void	*p;
-
-	p = malloc(element * size);
-	if (p != NULL)
-		ft_bzero(p, element * size);
-	return (p); // return something and not void
-}
-
-//ft_strlen
-
-int	ft_strlen(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		i++;
-	}
-	return (i);
-}
-
 //ft_strchr -> return everything after \n
 
 char	*ft_strchr(char *s, int c)
@@ -70,9 +32,18 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-//ft_strlcpy
+int	ft_strlen(char *s)
+{
+	int	i;
 
-//ft_strdup
+	i = 0;
+	while (s[i])
+	{
+		i++;
+	}
+	return (i);
+}
+
 char	*ft_strdup(char *s)
 {
 	int		i;
@@ -111,35 +82,13 @@ size_t	ft_strlcpy(char *dst, char *src, size_t size)
 	return (src_len);
 }
 
-void	*ft_memcpy(void *dest, void *src, size_t n)
-{
-	unsigned char		*d;
-	unsigned char	*s;
-
-	if (dest == NULL && src == NULL)
-		return (dest);
-	d = (unsigned char *)dest;
-	s = (unsigned char *)src;
-	if (d > s && d < s + n)
-		return (NULL);
-	while (n > 0)
-	{
-		*d = *s;
-		d++;
-		s++;
-		n--;
-	}
-	return (dest);
-}
-
-//ft_strjoin
 char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	len1;
 	size_t	len2;
 	char	*result;
 
-	if(s1 == NULL || s2 == NULL)
+	if (s1 == NULL || s2 == NULL)
 		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
@@ -150,4 +99,3 @@ char	*ft_strjoin(char *s1, char *s2)
 	ft_strlcpy(result + len1, s2, len2 + 1);
 	return (result);
 }
-

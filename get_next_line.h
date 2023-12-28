@@ -12,7 +12,6 @@
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-#define BUFFER_SIZE 1
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -21,7 +20,7 @@
 char	*get_next_line(int fd);
 void	ft_bzero(void *ptrmemadd, size_t n);
 char	*ft_calloc(size_t element, size_t size);
-int	ft_strlen(char *s);
+int		ft_strlen(char *s);
 char	*ft_strchr(char *s, int c);
 char	*ft_strdup(char *s);
 size_t	ft_strlcpy(char *dst, char *src, size_t size);
