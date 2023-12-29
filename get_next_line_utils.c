@@ -12,25 +12,6 @@
 
 #include "get_next_line.h"
 
-//ft_strchr -> return everything after \n
-
-char	*ft_strchr(char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == (char)c)
-		{
-			return ((char *)&s[i]);
-		}
-		i++;
-	}
-	if ((char) c == s[i])
-		return ((char *)&s[i]);
-	return (NULL);
-}
 
 int	ft_strlen(char *s)
 {
@@ -42,6 +23,27 @@ int	ft_strlen(char *s)
 		i++;
 	}
 	return (i);
+}
+
+char	*ft_calloc(size_t element, size_t size) // char *fx due to calloc type
+{
+	void			*p;
+	unsigned char	*pz;
+	size_t			b;
+
+	p = malloc(element * size);
+	if (p != NULL)
+	{
+		pz = (unsigned char *)p;
+		b = element * size;
+		while (b > 0)
+		{
+			*pz = 0;
+			pz++;
+			b--;
+		}
+	}
+	return (p);
 }
 
 char	*ft_strdup(char *s)

@@ -14,56 +14,51 @@
 
 #include "get_next_line.h"
 
-char	*ft_calloc(size_t element, size_t size) // char *fx due to calloc type
-{
-	void			*p;
-	unsigned char	*pz;
-	size_t			b;
+//ft_strchr -> return everything after \n
 
-	p = malloc(element * size);
-	if (p != NULL)
+char	*ft_strchr(char *s, int c)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] != '\0')
 	{
-		pz = (unsigned char *)p;
-		b = element * size;
-		while (b > 0)
+		if (s[i] == (char)c)
 		{
-			*pz = 0;
-			pz++;
-			b--;
+			return ((char *)&s[i]);
 		}
+		i++;
 	}
-	return (p);
+	if ((char) c == s[i])
+		return ((char *)&s[i]);
+	return (NULL);
 }
 
 char	*ft_read(int fd)
 {
 	static char	*store = NULL;
 	int			bytesread;
-	char		*buffer;
+	char		*buffalo;
 	char		*temp;
 
-	buffer = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (buffer == NULL)
+	buffalo = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (buffalo == NULL)
 		return (NULL);
 	if (store == NULL)
 		store = ft_strdup("");
 	bytesread = 1;
 	while (bytesread > 0)
 	{
-		bytesread = read(fd, buffer, BUFFER_SIZE);
-		buffer[bytesread] = '\0';
-		temp = ft_strjoin(store, buffer);
+		bytesread = read(fd, buffalo, BUFFER_SIZE);
+		buffalo[bytesread] = '\0';
+		temp = ft_strjoin(store, buffalo);
 		store = temp;
-		if (ft_strchr(buffer, '\n'))
-		{
+		if (ft_strchr(buffalo, '\n'))
 			break ;
-		}
 	}
-	free(buffer);
+	free(buffalo);
 	if (bytesread < 0)
-	{
 		return (NULL);
-	}
 	return (store);
 }
 
@@ -96,7 +91,7 @@ char	*ft_next(char *buffer)
 	else
 	{
 		temp = ft_strdup(newline_loc + 1);
-		if (temp == NULL)
+		if (temp == NULL) // try a different condition
 			return (NULL);
 		free (next_line);
 		next_line = temp;
@@ -115,57 +110,58 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = ft_line(buffer);
 	if (line == NULL)
-	{
-		free (buffer);
 		return (NULL);
-	}
 	remainder = ft_next(buffer);
 	if (remainder == NULL)
-	{
-		free (buffer);
 		return (NULL);
-	}
 	free (buffer);
-	buffer = ft_strdup(remainder);
+	buffer = ft_strdup(remainder); // find way to free buffer
 	return (line);
 }
-
+/*
 #include <stdio.h>
 
 int	main(void)
 {
-	int	fd;
-	int	i;
-	char	*a;
+	int		fd;
+	int		i;
+	char	*line;
 
 	fd = open("tim.txt", O_RDONLY);
 	i = 0;
-	while (i < 6)
+	while (i < 3)
 	{
-		a = get_next_line(fd);
-		printf("%s", a);
-		free (a);
+		line = get_next_line(fd);
+		printf("%s", line);
+		free (line);
 		i++;
 	}
 }
-/*
+
+
+#include <stdio.h>
+
 int main(void)
 {
 	int	 fd;
 	char	*line;
 
 	fd = open("tim.txt", O_RDONLY);
-	if (fd == -1)
+	if (fd < 0)
 	{
-	perror("error opening file");
-	return (1);
+		perror("error opening file");
+		return (1);
 	}
-	line = get_next_line(fd);
-	while (line != NULL)
+	while (1)
 	{
-	printf("%s", line);
-	free(line);
-	line = get_next_line(fd);
+		line = get_next_line(fd);
+		if (line == 0)
+		{
+			break ;
+		}
+		//printf("%s", line);
+		write(1, line, ft_strlen(line));
+		free(line);
 	}
 	close(fd);
 	return (0);
