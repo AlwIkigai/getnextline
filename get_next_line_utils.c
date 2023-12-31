@@ -12,10 +12,9 @@
 
 #include "get_next_line.h"
 
-
-int	ft_strlen(char *s)
+size_t	ft_strlen(char *s)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (s[i])
@@ -48,14 +47,14 @@ char	*ft_calloc(size_t element, size_t size) // char *fx due to calloc type
 
 char	*ft_strdup(char *s)
 {
-	int		i;
-	int		len;
-	char	*dup;
+	size_t		i;
+	size_t		len;
+	char		*dup;
 
 	len = ft_strlen(s);
 	dup = (char *)ft_calloc((len + 1), sizeof(char));
-	if (!dup)
-		return (0);
+	if (dup == NULL)
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{

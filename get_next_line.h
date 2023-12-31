@@ -20,7 +20,7 @@
 char	*get_next_line(int fd);
 void	ft_bzero(void *ptrmemadd, size_t n);
 char	*ft_calloc(size_t element, size_t size);
-int		ft_strlen(char *s);
+size_t	ft_strlen(char *s);
 char	*ft_strchr(char *s, int c);
 char	*ft_strdup(char *s);
 size_t	ft_strlcpy(char *dst, char *src, size_t size);

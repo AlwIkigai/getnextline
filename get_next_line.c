@@ -14,8 +14,6 @@
 
 #include "get_next_line.h"
 
-//ft_strchr -> return everything after \n
-
 char	*ft_strchr(char *s, int c)
 {
 	int	i;
@@ -34,88 +32,98 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-char	*ft_read(int fd)
+char	*ft_read(int fd, char *warehouse)
 {
-	static char	*store = NULL;
 	int			bytesread;
-	char		*buffalo;
+	char		*lorry;
 	char		*temp;
 
-	buffalo = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (buffalo == NULL)
+	lorry = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (lorry == NULL)
 		return (NULL);
-	if (store == NULL)
-		store = ft_strdup("");
 	bytesread = 1;
-	while (bytesread > 0)
+	while (bytesread > 0 && ft_strchr(lorry, '\n') == NULL)
 	{
-		bytesread = read(fd, buffalo, BUFFER_SIZE);
-		buffalo[bytesread] = '\0';
-		temp = ft_strjoin(store, buffalo);
-		store = temp;
-		if (ft_strchr(buffalo, '\n'))
-			break ;
+		bytesread = read(fd, lorry, BUFFER_SIZE);
+		if (bytesread < 0)
+		{
+			free (lorry);
+			free (warehouse);
+			warehouse = NULL;
+			return (NULL);
+		}
+		lorry[bytesread] = '\0';
+		temp = ft_strjoin(warehouse, lorry);
+		free (warehouse);
+		warehouse = ft_strdup(temp);
+		free (temp);
+		//if (bytesread == 0)
+		//	break ;
 	}
-	free(buffalo);
-	if (bytesread < 0)
-		return (NULL);
-	return (store);
+	free (lorry);
+	return (warehouse);
 }
 
-char	*ft_line(char *buffer)
+char	*ft_line(char *warehouse)
 {
 	char	*newline_loc;
 	int		line_len;
 	char	*line;
 
-	newline_loc = ft_strchr(buffer, '\n');
+	newline_loc = ft_strchr(warehouse, '\n');
 	if (newline_loc == NULL)
-		return (ft_strdup(buffer));
-	line_len = newline_loc - buffer + 1;
+		return (ft_strdup(warehouse));
+	line_len = newline_loc - warehouse + 1;
 	line = (char *)ft_calloc(line_len + 1, sizeof(char));
 	if (line == NULL)
 		return (NULL);
-	ft_strlcpy(line, buffer, line_len + 1);
+	ft_strlcpy(line, warehouse, line_len + 1);
 	return (line);
 }
 
-char	*ft_next(char *buffer)
+char	*ft_next(char *warehouse)
 {
-	static char	*next_line = NULL;
-	char		*temp;
 	char		*newline_loc;
+	char		*next_line;
 
-	newline_loc = ft_strchr(buffer, '\n');
+	newline_loc = ft_strchr(warehouse, '\n');
 	if (newline_loc == NULL)
-		next_line = ft_strdup(buffer);
+		next_line = ft_strdup(warehouse);
 	else
 	{
-		temp = ft_strdup(newline_loc + 1);
-		if (temp == NULL) // try a different condition
-			return (NULL);
-		free (next_line);
-		next_line = temp;
+		next_line = ft_strdup(newline_loc + 1);
 	}
 	return (next_line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder = NULL;
-	char		*buffer;
+	static char	*warehouse = NULL;
 	char		*line;
+	char		*update_store;
 
-	buffer = ft_read(fd);
-	if (buffer == NULL)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	line = ft_line(buffer);
+	if (warehouse == NULL)
+	{
+		warehouse = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		//warehouse[0] = '\0';
+	}
+	warehouse = ft_read(fd, warehouse);
+	if (warehouse == NULL || warehouse[0] == '\0')
+	{
+		free (warehouse);
+		warehouse = NULL;
+		return (NULL);
+	}
+	line = ft_line(warehouse);
 	if (line == NULL)
 		return (NULL);
-	remainder = ft_next(buffer);
-	if (remainder == NULL)
+	update_store = ft_next(warehouse);
+	if (update_store == NULL)
 		return (NULL);
-	free (buffer);
-	buffer = ft_strdup(remainder); // find way to free buffer
+	free (warehouse);
+	warehouse = update_store;
 	return (line);
 }
 /*
@@ -125,45 +133,67 @@ int	main(void)
 {
 	int		fd;
 	int		i;
-	char	*line;
+	char	*mainline;
 
 	fd = open("tim.txt", O_RDONLY);
 	i = 0;
-	while (i < 3)
+	while ((mainline = get_next_line(fd)) != NULL)
 	{
-		line = get_next_line(fd);
-		printf("%s", line);
-		free (line);
+		printf("%s", mainline);
+		free (mainline);
 		i++;
 	}
+	mainline = get_next_line(fd);
+	free (mainline);
 }
 
 
 #include <stdio.h>
-
-int main(void)
+int     main(void)
 {
-	int	 fd;
-	char	*line;
+        char    *line;
+//      int     i = 0;
+        int fd = open("tests/only_nl.txt", O_RDONLY);
+        
+//      while ((line = get_next_line(fd)) != NULL && i < 3)
+//      {
+//              printf("%s\n", line);
+//              free(line);
+//              i++;
+//      }
+
+        line = get_next_line(fd);
+        printf("%s", line);
+        free(line);     
+        line = get_next_line(fd);
+        printf("%s", line);
+        free(line);
+        line = get_next_line(fd);
+
+        printf("%s", line);
+        free(line);
+        
+        close(fd);
+        return (0);
+}
+
+#include <stdio.h>
+
+int	main(void)
+{
+	int		fd;
+	int		i;
+	char	*mainline;
 
 	fd = open("tim.txt", O_RDONLY);
-	if (fd < 0)
+	i = 0;
+	while (i < 1)
 	{
-		perror("error opening file");
-		return (1);
+		mainline = get_next_line(fd);
+		printf("%s", mainline);
+		free (mainline);
+		i++;
 	}
-	while (1)
-	{
-		line = get_next_line(fd);
-		if (line == 0)
-		{
-			break ;
-		}
-		//printf("%s", line);
-		write(1, line, ft_strlen(line));
-		free(line);
-	}
-	close(fd);
-	return (0);
 }
+
 */
