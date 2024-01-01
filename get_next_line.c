@@ -96,7 +96,6 @@ char	*ft_next(char *warehouse)
 	if (newline_loc == NULL)
 		next_line = ft_strdup(warehouse);
 	else
-	// condition to output last line
 	{
 		next_line = ft_strdup(newline_loc + 1);
 	}
@@ -127,13 +126,10 @@ char	*get_next_line(int fd)
 	}
 	line = ft_line(warehouse);
 	if (line == NULL)
+	{
+		free (line);
 		return (NULL);
-	update_store = ft_next(warehouse);
-	if (update_store == NULL)
-		return (NULL);
-	//free (warehouse);
-	warehouse = update_store;
-
+	}
 	if (ft_strchr(warehouse, '\n') == NULL)
 	{
 		line = ft_strdup(warehouse);
@@ -141,6 +137,14 @@ char	*get_next_line(int fd)
 		warehouse = NULL;
 		return (line);
 	}
+	update_store = ft_next(warehouse);
+	if (update_store == NULL)
+	{
+		free (line);
+		return (NULL);
+	}
+	free (warehouse);
+	warehouse = update_store;
 
 /*	if (warehouse[0] == '\0')
 	{
@@ -150,6 +154,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+/*
 #include <stdio.h>
 
 int	main(void)
@@ -170,7 +175,7 @@ int	main(void)
 	free (mainline);
 }
 
-/*
+
 #include <stdio.h>
 int     main(void)
 {
