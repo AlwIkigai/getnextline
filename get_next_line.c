@@ -45,10 +45,15 @@ char	*ft_read(int fd, char *warehouse)
 	while (bytesread > 0 && ft_strchr(lorry, '\n') == NULL)
 	{
 		bytesread = read(fd, lorry, BUFFER_SIZE);
-		if (bytesread < 0)
+		if (bytesread == 0)
+			break ;
+		else if (bytesread < 0)
 		{
 			free (lorry);
 			free (warehouse);
+			return (NULL);
+			//if (temp != NULL)
+			//	free (temp);
 			warehouse = NULL;
 			return (NULL);
 		}
@@ -57,8 +62,6 @@ char	*ft_read(int fd, char *warehouse)
 		free (warehouse);
 		warehouse = ft_strdup(temp);
 		free (temp);
-		//if (bytesread == 0)
-		//	break ;
 	}
 	free (lorry);
 	return (warehouse);
@@ -72,12 +75,15 @@ char	*ft_line(char *warehouse)
 
 	newline_loc = ft_strchr(warehouse, '\n');
 	if (newline_loc == NULL)
-		return (ft_strdup(warehouse));
-	line_len = newline_loc - warehouse + 1;
-	line = (char *)ft_calloc(line_len + 1, sizeof(char));
-	if (line == NULL)
-		return (NULL);
-	ft_strlcpy(line, warehouse, line_len + 1);
+		line = ft_strdup(warehouse);
+	else
+	{
+		line_len = newline_loc - warehouse + 1;
+		line = (char *)ft_calloc(line_len + 1, sizeof(char));
+		if (line == NULL)
+			return (NULL);
+		ft_strlcpy(line, warehouse, line_len + 1);
+	}
 	return (line);
 }
 
@@ -90,6 +96,7 @@ char	*ft_next(char *warehouse)
 	if (newline_loc == NULL)
 		next_line = ft_strdup(warehouse);
 	else
+	// condition to output last line
 	{
 		next_line = ft_strdup(newline_loc + 1);
 	}
@@ -110,11 +117,13 @@ char	*get_next_line(int fd)
 		//warehouse[0] = '\0';
 	}
 	warehouse = ft_read(fd, warehouse);
-	if (warehouse == NULL || warehouse[0] == '\0')
 	{
+	if (warehouse == NULL || warehouse[0] == '\0')
+		{
 		free (warehouse);
 		warehouse = NULL;
 		return (NULL);
+		}
 	}
 	line = ft_line(warehouse);
 	if (line == NULL)
@@ -122,11 +131,25 @@ char	*get_next_line(int fd)
 	update_store = ft_next(warehouse);
 	if (update_store == NULL)
 		return (NULL);
-	free (warehouse);
+	//free (warehouse);
 	warehouse = update_store;
+
+	if (ft_strchr(warehouse, '\n') == NULL)
+	{
+		line = ft_strdup(warehouse);
+		free (warehouse);
+		warehouse = NULL;
+		return (line);
+	}
+
+/*	if (warehouse[0] == '\0')
+	{
+		free (warehouse);
+		warehouse = NULL;
+	}*/
 	return (line);
 }
-/*
+
 #include <stdio.h>
 
 int	main(void)
@@ -147,7 +170,7 @@ int	main(void)
 	free (mainline);
 }
 
-
+/*
 #include <stdio.h>
 int     main(void)
 {
