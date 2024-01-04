@@ -51,7 +51,6 @@ char	*ft_read(int fd, char *warehouse)
 		{
 			free (lorry);
 			free (warehouse);
-			warehouse = NULL;
 			return (NULL);
 		}
 		lorry[bytesread] = '\0';
@@ -72,7 +71,10 @@ char	*ft_line(char *warehouse)
 
 	newline_loc = ft_strchr(warehouse, '\n');
 	if (newline_loc == NULL)
-		return (warehouse);
+	{
+		line = ft_strdup(warehouse);
+		return (line);
+	}
 	else
 	{
 		line_len = newline_loc - warehouse + 1;
@@ -115,14 +117,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	line = ft_line(warehouse);
-	if (line == NULL)
-	{
-		free (line);
-		return (NULL);
-	}
 	if (ft_strchr(warehouse, '\n') == NULL)
 	{
-		line = ft_strdup(warehouse);
 		free (warehouse);
 		warehouse = NULL;
 		return (line);
