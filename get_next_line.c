@@ -51,9 +51,6 @@ char	*ft_read(int fd, char *warehouse)
 		{
 			free (lorry);
 			free (warehouse);
-			return (NULL);
-			//if (temp != NULL)
-			//	free (temp);
 			warehouse = NULL;
 			return (NULL);
 		}
@@ -75,7 +72,7 @@ char	*ft_line(char *warehouse)
 
 	newline_loc = ft_strchr(warehouse, '\n');
 	if (newline_loc == NULL)
-		line = ft_strdup(warehouse);
+		return (warehouse);
 	else
 	{
 		line_len = newline_loc - warehouse + 1;
@@ -96,9 +93,7 @@ char	*ft_next(char *warehouse)
 	if (newline_loc == NULL)
 		next_line = ft_strdup(warehouse);
 	else
-	{
 		next_line = ft_strdup(newline_loc + 1);
-	}
 	return (next_line);
 }
 
@@ -111,18 +106,13 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (warehouse == NULL)
-	{
 		warehouse = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-		//warehouse[0] = '\0';
-	}
 	warehouse = ft_read(fd, warehouse);
-	{
 	if (warehouse == NULL || warehouse[0] == '\0')
-		{
+	{
 		free (warehouse);
 		warehouse = NULL;
 		return (NULL);
-		}
 	}
 	line = ft_line(warehouse);
 	if (line == NULL)
@@ -145,12 +135,6 @@ char	*get_next_line(int fd)
 	}
 	free (warehouse);
 	warehouse = update_store;
-
-/*	if (warehouse[0] == '\0')
-	{
-		free (warehouse);
-		warehouse = NULL;
-	}*/
 	return (line);
 }
 
@@ -165,16 +149,25 @@ int	main(void)
 
 	fd = open("tim.txt", O_RDONLY);
 	i = 0;
-	while ((mainline = get_next_line(fd)) != NULL)
+	// while ((mainline = get_next_line(fd)) != NULL)
+	for (int i = 0; i < 10; i++)
 	{
+		mainline = get_next_line(fd);
+		if (!mainline)
+			break ;
 		printf("%s", mainline);
 		free (mainline);
-		i++;
 	}
 	mainline = get_next_line(fd);
+// A file descriptor is an unsigned integer
+// used by a process to identify an open file
+	if (fd == -1)
+	{
+		perror("error opening file");
+		return (1);
+	}
 	free (mainline);
 }
-
 
 #include <stdio.h>
 int     main(void)
