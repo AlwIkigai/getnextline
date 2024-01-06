@@ -92,10 +92,8 @@ char	*ft_next(char *warehouse)
 	char		*next_line;
 
 	newline_loc = ft_strchr(warehouse, '\n');
-	if (newline_loc == NULL)
-		next_line = ft_strdup(warehouse);
-	else
-		next_line = ft_strdup(newline_loc + 1);
+	next_line = ft_strdup(newline_loc + 1);
+	free (warehouse);
 	return (next_line);
 }
 
@@ -103,7 +101,6 @@ char	*get_next_line(int fd)
 {
 	static char	*warehouse = NULL;
 	char		*line;
-	char		*update_store;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -123,18 +120,17 @@ char	*get_next_line(int fd)
 		warehouse = NULL;
 		return (line);
 	}
-	update_store = ft_next(warehouse);
-	if (update_store == NULL)
-	{
-		free (line);
-		return (NULL);
-	}
-	free (warehouse);
-	warehouse = update_store;
+	warehouse = ft_next(warehouse);
 	return (line);
 }
 
 /*
+// remove strdup in ft_next as it is under main gnl function
+// for condition without new line
+// remove update_store
+// update warehouse with ft_next
+// free warehouse in ft_next
+
 #include <stdio.h>
 
 int	main(void)
