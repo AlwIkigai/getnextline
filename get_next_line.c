@@ -45,9 +45,7 @@ char	*ft_read(int fd, char *warehouse)
 	while (bytesread > 0 && ft_strchr(lorry, '\n') == NULL)
 	{
 		bytesread = read(fd, lorry, BUFFER_SIZE);
-		if (bytesread == 0)
-			break ;
-		else if (bytesread < 0)
+		if (bytesread < 0)
 		{
 			free (lorry);
 			free (warehouse);
