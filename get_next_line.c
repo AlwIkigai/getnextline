@@ -1,15 +1,13 @@
 /* ************************************************************************** */
-/*										  */
-/*							  :::	   ::::::::   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
-/*							  +:+ +:+		  +:+	 */
-/*   By: asyed <marvin@42.fr>				+#+  +:+	   +#+		  */
-/*						  +#+#+#+#+#+	+#+		  */
-/*   Created: 2023/11/09 16:46:31 by asyed		   #+#	#+#		  */
-/*   Updated: 2023/12/28 13:59:56 by asyed            ###   ########.fr       */
-/*										  */
-/* ************************************************************************** */
-/* ************************************************************************** */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asyed <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/08 18:59:53 by asyed             #+#    #+#             */
+/*   Updated: 2024/01/08 19:00:09 by asyed            ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
@@ -121,90 +119,3 @@ char	*get_next_line(int fd)
 	warehouse = ft_next(warehouse);
 	return (line);
 }
-
-/*
-// remove strdup in ft_next as it is under main gnl function
-// for condition without new line
-// remove update_store
-// update warehouse with ft_next
-// free warehouse in ft_next
-
-#include <stdio.h>
-
-int	main(void)
-{
-	int		fd;
-	int		i;
-	char	*mainline;
-
-	fd = open("tim.txt", O_RDONLY);
-	i = 0;
-	// while ((mainline = get_next_line(fd)) != NULL)
-	for (int i = 0; i < 10; i++)
-	{
-		mainline = get_next_line(fd);
-		if (!mainline)
-			break ;
-		printf("%s", mainline);
-		free (mainline);
-	}
-	mainline = get_next_line(fd);
-// A file descriptor is an unsigned integer
-// used by a process to identify an open file
-	if (fd == -1)
-	{
-		perror("error opening file");
-		return (1);
-	}
-	free (mainline);
-}
-
-#include <stdio.h>
-int     main(void)
-{
-        char    *line;
-//      int     i = 0;
-        int fd = open("tests/only_nl.txt", O_RDONLY);
-        
-//      while ((line = get_next_line(fd)) != NULL && i < 3)
-//      {
-//              printf("%s\n", line);
-//              free(line);
-//              i++;
-//      }
-
-        line = get_next_line(fd);
-        printf("%s", line);
-        free(line);     
-        line = get_next_line(fd);
-        printf("%s", line);
-        free(line);
-        line = get_next_line(fd);
-
-        printf("%s", line);
-        free(line);
-        
-        close(fd);
-        return (0);
-}
-
-#include <stdio.h>
-
-int	main(void)
-{
-	int		fd;
-	int		i;
-	char	*mainline;
-
-	fd = open("tim.txt", O_RDONLY);
-	i = 0;
-	while (i < 1)
-	{
-		mainline = get_next_line(fd);
-		printf("%s", mainline);
-		free (mainline);
-		i++;
-	}
-}
-
-*/

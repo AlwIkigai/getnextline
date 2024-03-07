@@ -24,7 +24,7 @@ size_t	ft_strlen(char *s)
 	return (i);
 }
 
-char	*ft_calloc(size_t element, size_t size) // char *fx due to calloc type
+char	*ft_calloc(size_t element, size_t size)
 {
 	void			*p;
 	unsigned char	*pz;

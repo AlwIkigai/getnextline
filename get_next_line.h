@@ -17,6 +17,10 @@
 # include <stdlib.h>
 # include <fcntl.h>
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
 char	*get_next_line(int fd);
 void	ft_bzero(void *ptrmemadd, size_t n);
 char	*ft_calloc(size_t element, size_t size);
