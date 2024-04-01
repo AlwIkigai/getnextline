@@ -6,7 +6,7 @@
 /*   By: asyed <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:59:53 by asyed             #+#    #+#             */
-/*   Updated: 2024/01/08 19:00:09 by asyed            ###   ########.fr       */
+/*   Updated: 2024/03/20 14:45:07 by asyed            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*ft_line(char *warehouse)
 	return (line);
 }
 
-char	*ft_next(char *warehouse)
+char	*ft_next(char *warehouse )
 {
 	char		*newline_loc;
 	char		*next_line;
